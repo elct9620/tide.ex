@@ -21,6 +21,11 @@ module Elixir
         @handler = Handler.new(server)
         Tuple.new([:ok, ruby])
       end
+
+      # @return [ErlPort::ErlTerm::Atom] :ok
+      def ok(*_args)
+        :ok
+      end
     end
   end
 end

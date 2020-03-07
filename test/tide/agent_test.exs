@@ -14,4 +14,11 @@ defmodule Tide.AgentTest do
   test "Can load with callback" do
     assert :callback == Tide.Agent.load("load", "callback")
   end
+
+  test "Can receive result by exec event" do
+    Tide.Agent.load("exec")
+    assert :ok == Tide.Agent.exec([nil, nil], "test", [])
+  end
+
+  # TODO: Test emit
 end
