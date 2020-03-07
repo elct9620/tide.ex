@@ -15,4 +15,16 @@ defmodule Tide.Agent do
     {:ok, state} = Tide.Reaction.start_link()
     {:ok, [reaction, state]}
   end
+
+  @impl true
+  def handle_call(:reaction, _from, [reaction, state]), do: {:reply, reaction, [reaction, state]}
+
+  @impl true
+  def handle_call(:state, _from, [reaction, state]), do: {:reply, state, [reaction, state]}
+
+  @doc "Get reaction"
+  def reaction(pid), do: pid |> GenServer.call(:reaction)
+
+  @doc "Get state"
+  def state(pid), do: pid |> GenServer.call(:state)
 end
