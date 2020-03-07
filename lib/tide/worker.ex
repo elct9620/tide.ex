@@ -1,4 +1,4 @@
-defmodule Tide.Agent do
+defmodule Tide.Worker do
   @moduledoc """
   The GenServer to manage ruby processes
   """
