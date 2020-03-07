@@ -7,22 +7,28 @@ defmodule Tide.StateTest do
     {:ok, state: pid}
   end
 
-  test "Can convert to list", %{state: state} do
-    assert [] == state |> Tide.State.to_list
+  describe "Tide.State.to_list/1" do
+    test "returns []", %{state: state} do
+      assert [] == state |> Tide.State.to_list
+    end
   end
 
-  test "Can change state", %{state: state} do
-    assert [] == state |> Tide.State.to_list
-    state |> Tide.State.put(:name, "Bob")
-    assert [] != state |> Tide.State.to_list
+  describe "Tide.State.put/3" do
+    test "change :name to Bob", %{state: state} do
+      assert [] == state |> Tide.State.to_list
+      state |> Tide.State.put(:name, "Bob")
+      assert [] != state |> Tide.State.to_list
+    end
   end
 
-  test "Can get state by key", %{state: state} do
-    state |> Tide.State.put(:name, "Jimmy")
-    assert "Jimmy" == state |> Tide.State.get(:name)
-  end
+  describe "Tide.State.get/3" do
+    test "get :name returns Jimmy", %{state: state} do
+      state |> Tide.State.put(:name, "Jimmy")
+      assert "Jimmy" == state |> Tide.State.get(:name)
+    end
 
-  test "When key not exist return nil", %{state: state} do
-    assert nil == state |> Tide.State.get(:name)
+    test "no :name key returns nil", %{state: state} do
+      assert nil == state |> Tide.State.get(:name)
+    end
   end
 end

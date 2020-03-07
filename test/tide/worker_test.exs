@@ -7,17 +7,23 @@ defmodule Tide.WorkerTest do
     {:ok, agent: pid}
   end
 
-  test "Can load ruby file" do
-    assert :ok == Tide.Worker.load("load")
+  describe "Tide.Worker.load/1" do
+    test "returns :ok" do
+      assert :ok == Tide.Worker.load("load")
+    end
   end
 
-  test "Can load with callback" do
-    assert :callback == Tide.Worker.load("load", "callback")
+  describe "Tide.Worker.load/2" do
+    test "returns callback result" do
+      assert :callback == Tide.Worker.load("load", "callback")
+    end
   end
 
-  test "Can receive result by exec event" do
-    Tide.Worker.load("exec")
-    assert :ok == Tide.Worker.exec([nil, nil], "test", [])
+  describe "Tide.Worker.exec/3" do
+    test "returns event result" do
+      Tide.Worker.load("exec")
+      assert :ok == Tide.Worker.exec([nil, nil], "test", [])
+    end
   end
 
   # TODO: Test emit

@@ -7,12 +7,16 @@ defmodule Tide.ReactionTest do
     {:ok, reaction: pid}
   end
 
-  test "Can get from empty queue", %{reaction: reaction} do
-    assert nil == reaction |> Tide.Reaction.next
+  describe "Tide.Reaction.next/1" do
+    test "returns nil", %{reaction: reaction} do
+      assert nil == reaction |> Tide.Reaction.next
+    end
   end
 
-  test "Can add reaction to queue", %{reaction: reaction} do
-    assert :ok == reaction |> Tide.Reaction.push(:event)
-    assert :event == reaction |> Tide.Reaction.next
+  describe "Tide.Reaction.push/2" do
+    test "returns :ok", %{reaction: reaction} do
+      assert :ok == reaction |> Tide.Reaction.push(:event)
+      assert :event == reaction |> Tide.Reaction.next
+    end
   end
 end
