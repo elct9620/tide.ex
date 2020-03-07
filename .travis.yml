@@ -3,5 +3,3 @@ elixir:
   - 1.10
 otp_release:
   - 21.0
-rvm:
-  - 2.6
