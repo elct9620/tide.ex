@@ -1,6 +1,6 @@
 defmodule Tide.WorkerTest do
   use ExUnit.Case
-  doctest Tide
+  doctest Tide.Worker
 
   setup do
     {:ok, pid} = Tide.Worker.start_link("test/assets/ruby")
