@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'elixir/tide/registry'
+require 'elixir/tide/reaction'
+require 'elixir/tide/state'
 
 module Elixir
   module Tide
@@ -55,8 +57,10 @@ module Elixir
       # @param args [Array] The arguments
       #
       # @since 0.1.0
-      def initialize(handlers, name, args = [])
-        @reaction, @state, @target = handlers
+      def initialize((reaction, state, target), name, args = [])
+        @reaction = Reaction.new(reaction)
+        @state = State.new(state)
+        @target = target
         @name = name
         @args = args || []
       end
@@ -68,6 +72,16 @@ module Elixir
       # @since 0.1.0
       def exec(&block)
         instance_exec(*@args, &block)
+      end
+
+      # Create reaction
+      #
+      # @param name  [String|Symbol] the reaction name
+      # @param args [Array] the arguments
+      #
+      # @since 0.1.0
+      def reply(name, *args)
+        @reaction.emit(name, *args)
       end
     end
   end

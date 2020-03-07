@@ -27,5 +27,13 @@ defmodule Tide.AgentTest do
     end
   end
 
-  # TODO: test emit
+  describe "Tide.Agent.emit/2" do
+    test "returns :ok", %{agent: agent} do
+      Tide.Worker.load("emit")
+      agent |> Tide.Agent.emit("test")
+      # TODO: Prevent wait by timer
+      :timer.sleep(10)
+      assert {:ok, _} = agent |> Tide.Agent.reaction |> Tide.Reaction.next
+    end
+  end
 end

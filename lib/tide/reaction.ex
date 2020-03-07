@@ -20,6 +20,9 @@ defmodule Tide.Reaction do
   @impl true
   def handle_cast({:push, reaction}, queue), do: {:noreply, queue ++ [reaction]}
 
+  @impl true
+  def handle_info(reaction, queue), do: {:noreply, queue ++ [reaction]}
+
   @doc "Get next reaction"
   def next(pid), do: pid |> GenServer.call(:next)
 
