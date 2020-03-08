@@ -1,4 +1,4 @@
-Tide ![Hex.pm](https://img.shields.io/hexpm/v/tide) [![Build Status](https://travis-ci.com/elct9620/tide.ex.svg?branch=master)](https://travis-ci.com/elct9620/tide.ex)
+Tide [![Hex.pm](https://img.shields.io/hexpm/v/tide)](https://hex.pm/packages/tide) [![Build Status](https://travis-ci.com/elct9620/tide.ex.svg?branch=master)](https://travis-ci.com/elct9620/tide.ex)
 ===
 
 Similar to [elixir/export](https://github.com/fazibear/export) but design for asynchronous.
