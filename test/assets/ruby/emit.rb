@@ -1,3 +1,3 @@
 # frozen_string_literal: true
 
-Elixir::Tide::Event.add_listener('test') { reply :ok }
+Elixir::Tide.on('test') { reply :ok }

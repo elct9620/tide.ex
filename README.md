@@ -45,12 +45,12 @@ Create a Ruby script (e.g. `priv/ruby/app.rb`) and put your code
 require 'elixir/tide'
 
 # Immediately will use the return value
-Elixir::Tide::Event.add_listener("say") do |name|
+Elixir::Tide.on("say") do |name|
   [:ok, "Hello #{name}"]
 end
 
 # Async event use "Tide.Agent.emit"
-Elixir::Tide::Event.add_listener("sleep") do |wait_time|
+Elixir::Tide.on("sleep") do |wait_time|
   sleep wait_time.to_i
   reply :ok, "I am awake!"
 end
@@ -98,7 +98,7 @@ Tide.Agent.state(pid)
 ```
 
 ```ruby
-Elixir::Tide::Event.add_listener("from_state") do
+Elixir::Tide.on("from_state") do
   puts "Hi, #{state[:name]}"
 end
 ```

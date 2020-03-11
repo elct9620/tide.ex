@@ -31,6 +31,8 @@ module Elixir
           registry.add(name, &block)
         end
 
+        alias on add_listener
+
         # Remove Event
         #
         # @param name [String|Symbol] the event name
@@ -38,6 +40,8 @@ module Elixir
         def remove_listener(name, &block)
           registry.remove(name, &block)
         end
+
+        alias off remove_listener
 
         # Get event
         #
