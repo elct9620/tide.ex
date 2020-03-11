@@ -46,9 +46,14 @@ defmodule Tide.AgentTest do
   end
 
   describe "Tide.Agent.exec/2" do
-    test "returns :ok", %{agent: agent} do
+    test "ruby use block to returns :ok", %{agent: agent} do
       Tide.Worker.load("exec")
-      assert :ok = agent |> Tide.Agent.exec("test")
+      assert :ok = agent |> Tide.Agent.exec("use_block")
+    end
+
+    test "ruby use reply to returns :ok", %{agent: agent} do
+      Tide.Worker.load("exec")
+      assert :ok = agent |> Tide.Agent.exec("use_reply")
     end
   end
 

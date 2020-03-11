@@ -22,7 +22,7 @@ defmodule Tide.WorkerTest do
   describe "Tide.Worker.exec/3" do
     test "returns event result" do
       Tide.Worker.load("exec")
-      assert :ok == Tide.Worker.exec([nil, []], "test", [])
+      assert :ok == Tide.Worker.exec([nil, []], "use_block", [])
     end
   end
 

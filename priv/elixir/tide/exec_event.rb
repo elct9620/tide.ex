@@ -20,9 +20,22 @@ module Elixir
         @lock.synchronize do
           return if @executed
 
-          @executed = true
-          Tide.handler.reply :ok, @target, super(&block)
+          ret = super(&block)
+          reply(*ret) unless @executed
         end
+      end
+
+      # Create reaction
+      #
+      # @param name  [String|Symbol] the reaction name
+      # @param args [Array] the arguments
+      #
+      # @since 0.1.0
+      def reply(*args)
+        return if @executed
+
+        @executed = true
+        Tide.handler.reply :ok, @target, *args
       end
     end
   end
