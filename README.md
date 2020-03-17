@@ -10,7 +10,7 @@ Adding `tide` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:tide, "~> 0.2.0"}
+    {:tide, "~> 0.2.1"}
   ]
 end
 ```
@@ -21,7 +21,7 @@ Start `Tide.Worker` to handle event
 
 ```ex
 children = [
-  {Tide.Worker, "priv/ruby"},
+  {Tide.Worker, :code.priv_dir(:app_name) |> Path.join("ruby")},
   # ...
 ]
 options = [strategy: :one_for_one, name: __MODULE__]
@@ -46,7 +46,7 @@ require 'elixir/tide'
 
 # Immediately will use the return value
 Elixir::Tide.on("say") do |name|
-  [:ok, "Hello #{name}"]
+  reply :ok, "Hello #{name}"
 end
 
 # Async event use "Tide.Agent.emit"

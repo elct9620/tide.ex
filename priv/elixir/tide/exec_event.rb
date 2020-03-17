@@ -31,11 +31,13 @@ module Elixir
       # @param args [Array] the arguments
       #
       # @since 0.1.0
-      def reply(*args)
+      def reply(name, *args)
         return if @executed
 
         @executed = true
-        Tide.handler.reply :ok, @target, *args
+        return Tide.handler.reply :ok, @target, name if args.empty?
+
+        Tide.handler.reply :ok, @target, Tuple.new([name, args])
       end
     end
   end

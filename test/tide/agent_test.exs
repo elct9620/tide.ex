@@ -51,9 +51,19 @@ defmodule Tide.AgentTest do
       assert :ok = agent |> Tide.Agent.exec("use_block")
     end
 
+    test "ruby use block with args to returns :ok", %{agent: agent} do
+      Tide.Worker.load("exec")
+      assert :ok = agent |> Tide.Agent.exec("use_block_arg", ["Hi"])
+    end
+
     test "ruby use reply to returns :ok", %{agent: agent} do
       Tide.Worker.load("exec")
       assert :ok = agent |> Tide.Agent.exec("use_reply")
+    end
+
+    test "ruby use reply with args to returns :ok", %{agent: agent} do
+      Tide.Worker.load("exec")
+      assert {:ok, ["Hi"]} = agent |> Tide.Agent.exec("use_reply_arg", ["Hi"])
     end
   end
 

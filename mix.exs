@@ -5,7 +5,7 @@ defmodule Tide.MixProject do
     [
       app: :tide,
       description: "Communicate with Ruby via Erlport",
-      version: "0.2.0",
+      version: "0.2.1",
       elixir: "~> 1.10",
       package: package(),
       start_permanent: Mix.env() == :prod,
