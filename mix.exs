@@ -33,6 +33,7 @@ defmodule Tide.MixProject do
   defp deps do
     [
       {:erlport, "~> 0.10.1"},
+      {:poolboy, "~> 1.5"},
       {:ex_doc, "~> 0.21", only: :dev, runtime: false},
     ]
   end
