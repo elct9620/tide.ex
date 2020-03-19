@@ -67,9 +67,17 @@ defmodule Tide.Agent do
   """
   def get(pid, key), do: pid |> GenServer.call({:get, key})
 
-  @doc "Exec a event"
+  @doc """
+  Exec an event
+
+  See `Tide.Server.exec/3`
+  """
   def exec(pid, command, args \\ []), do: pid |> GenServer.call({:exec, command, args})
 
-  @doc "Emit a event"
+  @doc """
+  Emit an event
+
+  See `Tide.Server.emit/3`
+  """
   def emit(pid, command, args \\ []), do: pid |> GenServer.cast({:emit, command, args})
 end
