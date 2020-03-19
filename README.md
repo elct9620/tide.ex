@@ -17,11 +17,11 @@ end
 
 ## Usage
 
-Start `Tide.Worker` to handle event
+Start `Tide.Supervisor` to create Ruby worker pool
 
 ```ex
 children = [
-  {Tide.Worker, :code.priv_dir(:app_name) |> Path.join("ruby")},
+  {Tide.Supervisor, root: :code.priv_dir(:app_name) |> Path.join("ruby"), file: "app"},
   # ...
 ]
 options = [strategy: :one_for_one, name: __MODULE__]
@@ -29,21 +29,11 @@ options = [strategy: :one_for_one, name: __MODULE__]
 Supervisor.start_link(children, options)
 ```
 
-Load your Ruby script
-
-```ex
-Tide.Worker.load("app")
-```
-
-> In most cases, you only need to load the one script
-
 ### Register Event
 
 Create a Ruby script (e.g. `priv/ruby/app.rb`) and put your code
 
 ```ruby
-require 'elixir/tide'
-
 # Immediately will use the return value
 Elixir::Tide.on("say") do |name|
   reply :ok, "Hello #{name}"
@@ -105,7 +95,13 @@ end
 
 ## Roadmap
 
-* [ ] Multiple Worker
-* [ ] Customize Options
+* [x] Worker Pool
+  * [x] Customize root directory by `root` options
+  * [x] Customize main file by `file` options
+  * [x] Customize initialize function by `function` options
+  * [ ] Customize environment variable by `env` options
+* [ ] User Defined Module
   * [ ] Customize `Tide.Reaction`
   * [ ] Customize `Tide.State`
+  * [x] Customize `Tide.Supervisor`
+  * [ ] Customize `Tide.Agent`
