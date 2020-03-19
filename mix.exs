@@ -7,6 +7,7 @@ defmodule Tide.MixProject do
       description: "Communicate with Ruby via Erlport",
       version: "0.2.1",
       elixir: "~> 1.10",
+      elixirc_paths: elixirc_paths(Mix.env),
       package: package(),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -37,4 +38,7 @@ defmodule Tide.MixProject do
       {:ex_doc, "~> 0.21", only: :dev, runtime: false},
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 end

@@ -4,14 +4,10 @@ defmodule Tide.Worker do
   """
   use GenServer
 
-  # TODO: Allow configure options
-  def start_link(app_dir), do: GenServer.start_link(__MODULE__, app_dir, name: __MODULE__)
+  def start_link(options), do: GenServer.start_link(__MODULE__, options)
 
   @impl true
-  def init(app_dir), do: :ruby.start_link(ruby_lib: [Path.expand(app_dir) |> String.to_charlist | tide_dir()]) |> register_handler
-
-  @impl true
-  def handle_call({:load, file, function}, _from, ruby), do: {:reply, ruby |> :ruby.call(String.to_atom(file), String.to_atom(function), []), ruby}
+  def init(options), do: :ruby.start_link(ruby_lib: [root(options) | tide_dir()]) |> register |> load(options)
 
   @impl true
   def handle_call({:exec, handler, event, args}, from, ruby) do
@@ -32,14 +28,16 @@ defmodule Tide.Worker do
   end
 
   @doc "Trigger an event"
-  def emit(handler, event, args \\ []), do: GenServer.cast(__MODULE__, {:emit, handler, event, args})
+  def emit(pid, handler, event, args \\ []), do: GenServer.cast(pid, {:emit, handler, event, args})
 
   @doc "Trigger an event with reply"
-  def exec(handler, event, args \\ []), do: GenServer.call(__MODULE__, {:exec, handler, event, args})
-
-  @doc "Load Ruby file"
-  def load(file, function \\ "Elixir::Tide::ok"), do: GenServer.call(__MODULE__, {:load, file, function})
+  def exec(pid, handler, event, args \\ []), do: GenServer.call(pid, {:exec, handler, event, args})
 
   defp tide_dir(), do: [:code.priv_dir(:tide)]
-  defp register_handler({:ok, ruby}), do: ruby |> :ruby.call(:"elixir/tide", :"Elixir::Tide::init", [self(), ruby])
+  defp root(options), do: Keyword.get(options, :root, "") |> Path.expand |> String.to_charlist
+  defp file(options), do: Keyword.get(options, :file, "elixir/tide") |> String.to_atom
+  defp function(options), do: Keyword.get(options, :function, "Elixir::Tide::ok") |> String.to_atom
+
+  defp register({:ok, ruby}), do: ruby |> :ruby.call(:"elixir/tide", :"Elixir::Tide::init", [self(), ruby])
+  defp load({:ok, ruby}, options), do: ruby |> :ruby.call(file(options), function(options), [ruby])
 end

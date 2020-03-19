@@ -32,11 +32,11 @@ defmodule Tide.Agent do
   def handle_call({:get, key}, _from, [reaction, state]), do: {:reply, state |> Tide.State.get(key), [reaction, state]}
 
   @impl true
-  def handle_call({:exec, command, args}, _from, [reaction, state]), do: {:reply, Tide.Worker.exec([reaction, state |> Tide.State.to_list], command, args), [reaction, state]}
+  def handle_call({:exec, command, args}, _from, [reaction, state]), do: {:reply, Tide.Server.exec([reaction, state |> Tide.State.to_list], command, args), [reaction, state]}
 
   @impl true
   def handle_cast({:emit, command, args}, [reaction, state]) do
-    Tide.Worker.emit([reaction, state |> Tide.State.to_list], command, args)
+    Tide.Server.emit([reaction, state |> Tide.State.to_list], command, args)
     {:noreply, [reaction, state]}
   end
 

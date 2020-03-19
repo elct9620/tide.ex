@@ -1,11 +1,10 @@
 defmodule Tide.AgentTest do
-  use ExUnit.Case
+  use Tide.ServerCase
   doctest Tide.Agent
 
   setup do
-    {:ok, worker} = Tide.Worker.start_link("test/assets/ruby")
     {:ok, agent} = Tide.Agent.start_link()
-    {:ok, worker: worker, agent: agent}
+    {:ok, agent: agent}
   end
 
   describe "Tide.Agent.state/1" do
@@ -46,30 +45,30 @@ defmodule Tide.AgentTest do
   end
 
   describe "Tide.Agent.exec/2" do
+    @tag tide_file: "exec"
     test "ruby use block to returns :ok", %{agent: agent} do
-      Tide.Worker.load("exec")
       assert :ok = agent |> Tide.Agent.exec("use_block")
     end
 
+    @tag tide_file: "exec"
     test "ruby use block with args to returns :ok", %{agent: agent} do
-      Tide.Worker.load("exec")
       assert :ok = agent |> Tide.Agent.exec("use_block_arg", ["Hi"])
     end
 
+    @tag tide_file: "exec"
     test "ruby use reply to returns :ok", %{agent: agent} do
-      Tide.Worker.load("exec")
       assert :ok = agent |> Tide.Agent.exec("use_reply")
     end
 
+    @tag tide_file: "exec"
     test "ruby use reply with args to returns :ok", %{agent: agent} do
-      Tide.Worker.load("exec")
       assert {:ok, ["Hi"]} = agent |> Tide.Agent.exec("use_reply_arg", ["Hi"])
     end
   end
 
   describe "Tide.Agent.emit/2" do
+    @tag tide_file: "emit"
     test "returns :ok", %{agent: agent} do
-      Tide.Worker.load("emit")
       agent |> Tide.Agent.emit("test")
       # TODO: Prevent wait by timer
       :timer.sleep(10)

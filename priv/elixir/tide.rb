@@ -29,9 +29,9 @@ module Elixir
         Tuple.new([:ok, ruby])
       end
 
-      # @return [ErlPort::ErlTerm::Atom] :ok
-      def ok(*_args)
-        :ok
+      # @return [ErlPort::ErlTerm::Atom] Tuple({:ok, ruby})
+      def ok(ruby, *_args)
+        Tuple.new([:ok, ruby])
       end
     end
   end
