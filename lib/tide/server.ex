@@ -16,7 +16,9 @@ defmodule Tide.Server do
   @doc "Set the max overflow worker"
   @callback overflow() :: integer()
 
-  defmacro __using__(_params) do
+  defmacro __using__(params) do
+    size = Keyword.get(params, :size)
+
     quote do
       @behaviour Tide.Server
 
@@ -34,7 +36,7 @@ defmodule Tide.Server do
         [
           name: {:local, :tide},
           worker_module: Tide.Worker,
-          size: size(),
+          size: unquote(size) || size(),
           max_overflow: overflow()
         ]
       end
