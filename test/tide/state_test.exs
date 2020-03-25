@@ -11,6 +11,14 @@ defmodule Tide.StateTest do
     test "returns []", %{state: state} do
       assert [] == state |> Tide.State.to_list
     end
+
+    test "returns [] when input an empty list" do
+      assert [] == [] |> Tide.State.to_list
+    end
+
+    test "returns [] when input an empty map" do
+      assert [] == %{} |> Tide.State.to_list
+    end
   end
 
   describe "Tide.State.put/3" do

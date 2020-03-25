@@ -6,38 +6,35 @@ defmodule Tide.Agent do
   use GenServer
 
   @doc "Start a new agent"
-  def start_link(), do: GenServer.start_link(__MODULE__, [])
+  def start_link(state \\ []), do: GenServer.start_link(__MODULE__, state)
 
   # TODO: Allow customize Reaction and State
   @impl true
-  def init([]) do
+  def init(state) do
     {:ok, reaction} = Tide.Reaction.start_link()
-    {:ok, state} = Tide.State.start_link()
     {:ok, [reaction, state]}
   end
 
   @impl true
-  def handle_call(:reaction, _from, [reaction, state]), do: {:reply, reaction, [reaction, state]}
+  def handle_call(:reaction, _from, [reaction, _] = handler), do: {:reply, reaction, handler}
 
   @impl true
-  def handle_call(:next, _from, [reaction, state]), do: {:reply, reaction |> Tide.Reaction.next, [reaction, state]}
+  def handle_call(:next, _from, [reaction, _] = handler), do: {:reply, reaction |> Tide.Reaction.next, handler}
 
   @impl true
-  def handle_call(:state, _from, [reaction, state]), do: {:reply, state, [reaction, state]}
+  def handle_call(:state, _from, [_, state] = handler), do: {:reply, state, handler}
 
   @impl true
-  def handle_call({:put, key, value}, _from, [reaction, state]), do: {:reply, state |> Tide.State.put(key, value), [reaction, state]}
+  def handle_call({:update, callback}, _from, [reaction, state]) when is_function(callback), do: {:reply, :ok, [reaction, callback.(state)]}
+  def handle_call({:update, state}, _from, [reaction, _]), do: {:reply, :ok, [reaction, state]}
 
   @impl true
-  def handle_call({:get, key}, _from, [reaction, state]), do: {:reply, state |> Tide.State.get(key), [reaction, state]}
+  def handle_call({:exec, command, args}, _from, [reaction, state] = handler), do: {:reply, Tide.Server.exec([reaction, state |> Tide.State.to_list], command, args), handler}
 
   @impl true
-  def handle_call({:exec, command, args}, _from, [reaction, state]), do: {:reply, Tide.Server.exec([reaction, state |> Tide.State.to_list], command, args), [reaction, state]}
-
-  @impl true
-  def handle_cast({:emit, command, args}, [reaction, state]) do
+  def handle_cast({:emit, command, args}, [reaction, state] = handler) do
     Tide.Server.emit([reaction, state |> Tide.State.to_list], command, args)
-    {:noreply, [reaction, state]}
+    {:noreply, handler}
   end
 
   @doc "Get reaction"
@@ -50,22 +47,11 @@ defmodule Tide.Agent do
   """
   def next(pid), do: pid |> GenServer.call(:next)
 
-  @doc "Get state"
+  @doc "Get the state"
   def state(pid), do: pid |> GenServer.call(:state)
 
-  @doc """
-  Change state value
-
-  See `Tide.State.put/3`
-  """
-  def put(pid, key, value), do: pid |> GenServer.call({:put, key, value})
-
-  @doc """
-  Get state value
-
-  See `Tide.State.get/2`
-  """
-  def get(pid, key), do: pid |> GenServer.call({:get, key})
+  @doc "Update the state"
+  def update(pid, callback), do: pid |> GenServer.call({:update, callback})
 
   @doc """
   Exec an event

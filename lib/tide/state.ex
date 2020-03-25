@@ -23,7 +23,10 @@ defmodule Tide.State do
   @impl true
   def handle_call({:get, key}, _from, state), do: {:reply, state |> Map.get(key), state}
 
+  # TODO: Check for keyword list
   @doc "Convert to list"
+  def to_list(state) when is_list(state), do: state
+  def to_list(state) when is_map(state), do: state |> Map.to_list
   def to_list(pid), do: pid |> GenServer.call({:to_list})
 
   @doc "Get value"

@@ -7,26 +7,6 @@ defmodule Tide.AgentTest do
     {:ok, agent: agent}
   end
 
-  describe "Tide.Agent.state/1" do
-    test "returns pid", %{agent: agent} do
-      assert is_pid(agent |> Tide.Agent.state)
-    end
-  end
-
-  describe "Tide.Agent.put/3" do
-    test "returns :ok", %{agent: agent} do
-      agent |> Tide.Agent.put(:name, "Alice")
-      assert [] != agent |> Tide.Agent.state |> Tide.State.to_list
-    end
-  end
-
-  describe "Tide.Agent.get/2" do
-    test "returns John", %{agent: agent} do
-      agent |> Tide.Agent.state |> Tide.State.put(:name, "John")
-      assert "John" == agent |> Tide.Agent.get(:name)
-    end
-  end
-
   describe "Tide.Agent.reaction/1" do
     test "returns pid", %{agent: agent} do
       assert is_pid(agent |> Tide.Agent.reaction)
@@ -41,6 +21,30 @@ defmodule Tide.AgentTest do
 
     test "returns nil when reaction is empty", %{agent: agent} do
       assert nil == agent |> Tide.Agent.next
+    end
+  end
+
+  describe "Tide.Agent.state/1" do
+    setup %{state: state} do
+      {:ok, agent} = Tide.Agent.start_link(state)
+      {:ok, agent: agent}
+    end
+
+    @tag state: [1]
+    test "returns [1] as default state", %{agent: agent} do
+      assert [1] == agent |> Tide.Agent.state
+    end
+  end
+
+  describe "Tide.Agent.update/2" do
+    test "returns [1] after update state", %{agent: agent} do
+      agent |> Tide.Agent.update([1])
+      assert [1] == agent |> Tide.Agent.state
+    end
+
+    test "returns [1] after update state by function", %{agent: agent} do
+      agent |> Tide.Agent.update(fn state -> state ++ [1] end)
+      assert [1] == agent |> Tide.Agent.state
     end
   end
 
