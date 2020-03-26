@@ -43,8 +43,8 @@ defmodule Tide.AgentTest do
     end
 
     test "returns [1] after update state by function", %{agent: agent} do
-      agent |> Tide.Agent.update(fn state -> state ++ [1] end)
-      assert [1] == agent |> Tide.Agent.state
+      agent |> Tide.Agent.update(fn state -> state |> Map.put(:id, 1) end)
+      assert %{id: 1} == agent |> Tide.Agent.state
     end
   end
 

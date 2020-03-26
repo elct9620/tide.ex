@@ -6,7 +6,7 @@ defmodule Tide.Agent do
   use GenServer
 
   @doc "Start a new agent"
-  def start_link(state \\ []), do: GenServer.start_link(__MODULE__, state)
+  def start_link(state \\ %{}), do: GenServer.start_link(__MODULE__, state)
 
   # TODO: Allow customize Reaction and State
   @impl true
@@ -51,7 +51,7 @@ defmodule Tide.Agent do
   def state(pid), do: pid |> GenServer.call(:state)
 
   @doc "Update the state"
-  def update(pid, callback), do: pid |> GenServer.call({:update, callback})
+  def update(pid, fun), do: pid |> GenServer.call({:update, fun})
 
   @doc """
   Exec an event

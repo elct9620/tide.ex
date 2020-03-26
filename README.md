@@ -82,15 +82,33 @@ The `Tide.Reaction` is a queue collect the reply from Ruby. You can use it to pr
 The Erlport didn't support call Erlang function from Thread, and to ensure your Ruby script can recover from crash.
 Use the `Tide.State` to persist the state and it will pass to Ruby by Tide.
 
+Attach a state to agent
+
 ```ex
-Tide.Agent.state(pid)
-|> Tide.State.put(:name, "Hello")
+{:ok, state} = Tide.State.start_link()
+{:ok, agent} = Tide.Agent.start_link(state)
 ```
 
-```ruby
-Elixir::Tide.on("from_state") do
-  puts "Hi, #{state[:name]}"
-end
+When we execute an event the state will convert to keyword list and save as `Tide::State` object.
+That means the `Map` or `Keyword List` is accept as a state.
+
+```ex
+state = %{user_id: 1, name: "John"}
+{:ok, agent} = Tide.Agent.start_link(state)
+```
+
+The state is part of agent and unable directly change it, but we can use `Tide.Agent.update/2` to update it.
+
+```ex
+agent
+|> Tide.Agent.update(fn(state) -> state |> Map.put(:name, "Bob")  end)
+```
+
+Or replace state to another new state
+
+```ex
+agent
+|> Tide.Agent.update(%{user_id: 1, name: "Alice"})
 ```
 
 ## Roadmap
