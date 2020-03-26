@@ -68,6 +68,12 @@ defmodule Tide.AgentTest do
     test "ruby use reply with args to returns :ok", %{agent: agent} do
       assert {:ok, ["Hi"]} = agent |> Tide.Agent.exec("use_reply_arg", ["Hi"])
     end
+
+    @tag tide_file: "exec"
+    test "ruby use emit with enqueue :async", %{agent: agent} do
+      assert :ok = agent |> Tide.Agent.exec("with_emit", [])
+      assert {:async, []} = agent |> Tide.Agent.next
+    end
   end
 
   describe "Tide.Agent.emit/2" do

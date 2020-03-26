@@ -14,3 +14,8 @@ Elixir::Tide.on('use_reply_arg') do |args|
   reply :error
   :error
 end
+
+Elixir::Tide.on('with_emit') do
+  emit :async
+  reply :ok
+end

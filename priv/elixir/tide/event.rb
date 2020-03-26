@@ -84,9 +84,11 @@ module Elixir
       # @param args [Array] the arguments
       #
       # @since 0.1.0
-      def reply(name, *args)
+      def emit(name, *args)
         @reaction.emit(name, *args)
       end
+
+      alias reply emit
     end
   end
 end
